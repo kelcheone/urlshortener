@@ -1,0 +1,17 @@
+CREATE DATABASE UrlShortener;
+
+USE UrlShortener;
+
+CREATE TABLE Urls(
+    id serial PRIMARY KEY,
+    original_url varchar(255) NOT NULL,
+    short_url varchar(255) NOT NULL,
+    clicks int NOT NULL DEFAULT 0
+);
+
+INSERT INTO Urls(original_url, short_url, clicks)
+    VALUES ('https://www.google.com', '2edsoe', 0);
+
+INSERT INTO Urls(original_url, short_url, clicks)
+    VALUES ('https://www.facebook.com', '3edsoe', 0);
+
