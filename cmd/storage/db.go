@@ -7,17 +7,12 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
-
-type PostgresStorage struct{}
-
-func NewPostgresStorage() *PostgresStorage {
-	return &PostgresStorage{}
-}
 
 var db *sql.DB
 
-func (p *PostgresStorage) Connect() {
+func Connect() {
 	err := godotenv.Load()
 
 	if err != nil {
@@ -42,4 +37,10 @@ func (p *PostgresStorage) Connect() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("SuccessFully connected")
+}
+
+func GetDb() *sql.DB {
+	return db
 }
