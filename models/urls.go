@@ -6,3 +6,11 @@ type URL struct {
 	Short_url    string `json:"short_url"`
 	Clicks       int    `json:"clicks"`
 }
+
+func (u *URL) Validate() error {
+	return nil
+}
+
+func (u *URL) Create() error {
+	return nil
+}
