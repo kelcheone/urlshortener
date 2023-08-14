@@ -5,24 +5,23 @@ import (
 	"net/http"
 
 	"github.com/kelcheone/urlshortener/cmd/handlers"
+	"github.com/kelcheone/urlshortener/cmd/storage"
 )
 
 func main() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Welcome to the homepage!")
-	})
-
-	mux.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "This is the about page.")
-	})
+	storage.Connect()
 
 	mux.HandleFunc("/redirect", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "https://google.com", http.StatusSeeOther)
 	})
 
 	mux.HandleFunc("/user/", handlers.GetId)
+
+	mux.HandleFunc("/create/", handlers.CreateUrl)
+
+	mux.HandleFunc("/", handlers.Redirect)
 
 	server := &http.Server{
 		Addr:    ":8080",
