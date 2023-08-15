@@ -21,7 +21,7 @@ func main() {
 
 	mux.HandleFunc("/create/", handlers.CreateUrl)
 
-	mux.HandleFunc("/", handlers.Redirect)
+	mux.HandleFunc("/r/", handlers.Redirect)
 
 	server := &http.Server{
 		Addr:    ":8080",

@@ -38,13 +38,12 @@ func GetId(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateUrl(w http.ResponseWriter, r *http.Request) {
-	original_url := r.URL.Path[len("/create/"):]
+	original_url := r.FormValue("original_url")
 
 	short_url, err := storage.CreateUrl(original_url)
 
 	if err != nil {
-		// http.Error(w, "Internal Server Error:", http.StatusInternalServerError)
-		//  include the error
+
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -56,11 +55,11 @@ func CreateUrl(w http.ResponseWriter, r *http.Request) {
 
 	HOST := os.Getenv("HOST")
 
-	fmt.Fprintf(w, "Short URL: %s\n", HOST+"/"+short_url)
+	fmt.Fprintf(w, "Short URL: %s\n", HOST+"/r/"+short_url)
 }
 
 func Redirect(w http.ResponseWriter, r *http.Request) {
-	to := r.URL.Path[len("/"):]
+	to := r.URL.Path[len("/r/"):]
 
 	dest, err := storage.GetOriginalLink(to)
 	if err != nil {
