@@ -4,43 +4,27 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strconv"
+	"text/template"
 
 	"github.com/joho/godotenv"
 	"github.com/kelcheone/urlshortener/cmd/storage"
 )
 
-type User struct {
-	ID   int
-	Name string
-}
+// render client
 
-var usersDB = map[int]User{
-	123: {ID: 123, Name: "Alice"},
-	456: {ID: 456, Name: "Bob"},
-}
-
-func GetId(w http.ResponseWriter, r *http.Request) {
-	idStr := r.URL.Path[len("/user/"):]
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		http.Error(w, "Invalid user ID", http.StatusBadRequest)
-		return
-	}
-
-	user, found := usersDB[id]
-	if !found {
-		http.NotFound(w, r)
-		return
-	}
-
-	fmt.Fprintf(w, "User ID: %d\n Name: %s\n", user.ID, user.Name)
+func RenderClient(w http.ResponseWriter, r *http.Request) {
+	// http.ServeFile(w, r, "./client/index.html")
+	tmpl := template.Must(template.ParseFiles("template/index.html"))
+	tmpl.Execute(w, nil)
 }
 
 func CreateUrl(w http.ResponseWriter, r *http.Request) {
-	original_url := r.FormValue("original_url")
+	original_url := r.FormValue("url")
+
+	fmt.Println(original_url)
 
 	short_url, err := storage.CreateUrl(original_url)
+	fmt.Println(short_url)
 
 	if err != nil {
 
@@ -55,7 +39,9 @@ func CreateUrl(w http.ResponseWriter, r *http.Request) {
 
 	HOST := os.Getenv("HOST")
 
-	fmt.Fprintf(w, "Short URL: %s\n", HOST+"/r/"+short_url)
+	tmpl := template.Must(template.ParseFiles("template/index.html"))
+
+	tmpl.ExecuteTemplate(w, "short-url", HOST+"/r/"+short_url)
 }
 
 func Redirect(w http.ResponseWriter, r *http.Request) {

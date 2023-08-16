@@ -33,9 +33,23 @@ func GetOriginalLink(short_url string) (string, error) {
 	db := GetDb()
 	var dest string
 	err := db.QueryRow("SELECT original_url FROM urls WHERE short_url=$1", short_url).Scan(&dest)
+	// update click count
+	if err != nil {
+		return "", err
+	}
+	err = UpdateClickCount(short_url)
 	if err != nil {
 		return "", err
 	}
 	return dest, nil
+}
 
+// update the click count
+func UpdateClickCount(short_url string) error {
+	db := GetDb()
+	_, err := db.Exec("UPDATE urls SET clicks = clicks + 1 WHERE short_url=$1", short_url)
+	if err != nil {
+		return err
+	}
+	return nil
 }

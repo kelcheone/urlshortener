@@ -13,11 +13,11 @@ func main() {
 
 	storage.Connect()
 
+	mux.HandleFunc("/", handlers.RenderClient)
+
 	mux.HandleFunc("/redirect", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "https://google.com", http.StatusSeeOther)
 	})
-
-	mux.HandleFunc("/user/", handlers.GetId)
 
 	mux.HandleFunc("/create/", handlers.CreateUrl)
 

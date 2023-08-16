@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Go URL</title>
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="flex justify-center items-center h-screen bg-gray-900">
+    <!-- Create a form to enter the long url -->
+    <div class="">
+      <form
+        class="flex flex-col justify-center items-center"
+        hx-post="/create/"
+        hx-target="#result"
+        hx-swap="beforeend"
+      >
+        <input
+          class="border border-gray-400 rounded-lg px-4 py-2 w-96"
+          type="text"
+          name="url"
+          placeholder="Enter the long url"
+        />
+        <button
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+          type="submit"
+        >
+          Go
+        </button>
+      </form>
+
+      <div class="flex flex-col justify-center items-center">
+        <!-- a results div with that has fixed height if the links are many one can scroll through the div to reach the desired link -->
+        <div
+          id="result"
+          class="flex text-slate-300 flex-col justify-center items-center mt-4 h-96 overflow-y-scroll min-w-50">
+          {{if .}} {{block "short-url" .}}
+          <div class="flex flex-col justify-center items-center mt-2 bg-gray-800 rounded-md p-3">
+            <span>Short URL</span>
+            <a href="{{.}}" target="_blank">{{.}}</a>
+          {{end}} {{end}}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
